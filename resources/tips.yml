@@ -1,4 +1,23 @@
 tips:
-  - 不要挖直上或直下！
-  - 使用!!etp back death返回死亡点
-  - 新人在晚上建议挖三填一
+  - text: "不要挖直上或直下！/n小心掉进岩浆！"
+    weight: 20
+  - text: "使用!!etp back death返回死亡点"  
+    weight: 20
+  - text: "新人在晚上建议挖三填一"
+    weight: 50
+  - text: "Star Platinum！The World！"
+    weight: 10
+    command:
+      - "tick freeze"
+      - 'execute as @a unless entity @s[nbt={active_effects:[{id:"minecraft:jump_boost"}]}] run effect give @s minecraft:jump_boost 1000000 255 true'
+      - 'execute as @a unless entity @s[nbt={active_effects:[{id:"minecraft:slowness"}]}] run effect give @s minecraft:slowness 1000000 255 true'
+      - 'execute as @a unless entity @s[nbt={active_effects:[{id:"minecraft:mining_fatigue"}]}] run effect give @s minecraft:mining_fatigue 1000000 255 true'
+      - 'execute as @a unless entity @s[nbt={active_effects:[{id:"minecraft:weakness"}]}] run effect give @s minecraft:weakness 1000000 255 true'
+      - "delay 5"
+      - 'execute as @a[nbt={active_effects:[{id:"minecraft:jump_boost",amplifier:-1b}]}] run effect clear @s minecraft:jump_boost'
+      - 'execute as @a[nbt={active_effects:[{id:"minecraft:slowness",amplifier:-1b}]}] run effect clear @s minecraft:slowness'
+      - 'execute as @a[nbt={active_effects:[{id:"minecraft:mining_fatigue",amplifier:-1b}]}] run effect clear @s minecraft:mining_fatigue'
+      - 'execute as @a[nbt={active_effects:[{id:"minecraft:weakness",amplifier:-1b}]}] run effect clear @s minecraft:weakness'
+      - "tick unfreeze"
+      - 'tellraw @a {"text":"[事件] §5时间开始流动！"}'
+    prefix: "[事件]"

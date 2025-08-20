@@ -95,12 +95,48 @@ def send_tips():
     if tips is not None:
         with tLock:
             while Task:
-                tip = random.choice(tips)
-                try:
-                    tip = RText.from_json_object(tip)
-                except ValueError:
-                    tip = str(tip)
-                psi.broadcast(RText.join(" ", [prefixRText, tip]))
+
+                # 计算权重
+                total_weight = sum(tip.get('weight', 0) for tip in tips)
+
+                if total_weight != 0:
+
+                    # 权重分配
+                    rand = random.randint(1, total_weight)
+                    current = 0
+                    selected_tip = None
+                    commands = {}
+                    
+                    # 抽取tip
+                    for one_tip in tips:
+                        current += one_tip.get('weight', 0)
+                        if rand <= current:
+                            selected_tip = one_tip.get('text', None)
+                            commands = one_tip.get('command', {})
+                            prefixRText = one_tip.get('prefix', prefixRText)
+                            break
+
+                    if selected_tip is not None:
+                        
+                        # 执行tip附带的命令
+                        def execute_command():
+                            for command in commands:
+                                # 添加命令delay的延时执行功能
+                                if command.startswith("delay"):
+                                    delay_time = float(command.split()[1])
+                                    time.sleep(delay_time)
+                                else:
+                                    psi.execute(command)
+
+                        # 用/n分行
+                        lines = selected_tip.split('/n')
+                        for tip in lines:
+                            try:
+                                tip = RText.from_json_object(tip)
+                            except ValueError:
+                                tip = str(tip)
+                            psi.broadcast(RText.join(" " if prefixRText is not "" and prefixRText is not None else "", [prefixRText if prefixRText is not None else "", tip]))
+                        execute_command()
                 time.sleep(interval)
 
 
